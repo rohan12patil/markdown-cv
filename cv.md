@@ -1,17 +1,25 @@
 # Rohan Patil
 
-**Role:** Lead Quality Engineer | SDET  
+**Role:** Lead Quality Engineer | AI & SDET  
 **Email:** rohan12patiluk@gmail.com  
-**Phone:** 07824047488  
+**Phone:** +44 7824047488  
 **Location:** United Kingdom  
-**LinkedIn:** linkedin.com/in/rohan12patil  
-**GitHub:** github.com/rohan12patil  
+**LinkedIn:** https://linkedin.com/in/rohan12patil  
+**GitHub:** https://github.com/rohan12patil  
 
 ---
 
 ## Professional Summary
 
-Highly skilled Lead QA Test Engineer with 13+ years of experience in leading testing activities for complex, scalable systems, SaaS, and CI/CD environments. Adept at defining test strategies, creating automation frameworks, and performing exploratory and manual testing. Strong expertise in Playwright, Selenium, and Appium with a proven ability to collaborate with Agile teams and deliver exceptional end-to-end testing for Web and Mobile applications. Committed to continuous improvement.
+- 13+ years of experience in Quality Assurance and leading testing activities for complex, scalable systems, SaaS, and CI/CD environments.
+- Adept at defining test strategies, creating automation frameworks, and performing exploratory and manual testing.
+- Strong expertise in Playwright, Selenium, and Appium with a proven ability to collaborate with Agile teams and deliver exceptional end-to-end testing for Web and Mobile applications.
+- Specialising in AI application quality - designing evaluation frameworks, authoring adversarial prompt suites, and validating RAG pipelines using Databricks to ensure the accuracy, safety, and reliability of LLM-backed features.
+- Experienced in implementing Eval-driven quality gates and partnering with data scientists and ML engineers to define measurable acceptance criteria.
+- Active contributor to the QA community — participating in meetups and conferences to share insights on emerging testing practices, AI quality engineering, and lessons learned from real-world projects.
+- Committed to continuous improvement and advancing quality practices at the intersection of traditional QA and AI.
+- Proven mentor and team leader, upskilling junior QA engineers through structured training, hands-on coaching, and establishing best practices that raise team-wide quality standards.
+
 
 ---
 
@@ -20,29 +28,39 @@ Highly skilled Lead QA Test Engineer with 13+ years of experience in leading tes
 | Category      | Tools / Technologies |
 |---------------|----------------------|
 | Automation    | Playwright, Selenium, Appium |
-| Languages     | HTML, CSS, JavaScript, TypeScript, Java, Python |
-| Testing       | Manual Testing, Mobile & Web, API Testing, BrowserStack |
-| Performance   | K6 |
-| API Tools     | Postman, RestAssured, Bruno |
-| AI Testing    | Evals |
-| Design        | Adobe XD, Figma, Miro, Zeplin |
-| Cloud         | AWS, GCP |
-| CI/CD         | GitHub Actions, Azure DevOps, GitLab, Jenkins |
-| Version Ctrl  | Git, GitHub, SVN |
-| SDLC          | Agile, SAFe, Waterfall |
-| Project Mgmt  | JIRA, Confluence, Bitbucket, Azure |
+| Languages     | JavaScript, TypeScript, Python, HTML, CSS |
+| Testing       | Manual, Functional, Regression, Integration, Mobile & Web, API, Accessibility, K6 (Performance) |
+| AI Testing    | Evals, Databricks, RAG Validation, LLM Testing |
+| API Tools     | Postman, Bruno |
+| Cloud & CI/CD | AWS, GCP, GitHub Actions, Azure DevOps, Jenkins |
+| Tooling       | Git, JIRA, Confluence |
+| Methodology   | Agile, Waterfall |
 
 ---
 
 ## Employment History
 
+### AI Quality Engineer
+**GE Aerospace | Tata Consultancy Services** · United Kingdom  
+_Jun 2025 – Present_
+
+- Testing AI-powered applications with a focus on evaluating model behaviour and output quality across multiple Evals.
+- Designed and executed evaluation frameworks to assess accuracy, relevance, and safety of AI model responses.
+- Leveraged Databricks for managing datasets, running evaluation pipelines, and tracking experiment results.
+- Authored adversarial prompt suites to surface hallucinations, jailbreaks, and out-of-scope responses in LLM-backed features.
+- Established baseline Eval benchmarks to detect regressions when underlying models or prompts were updated.
+- Validated Retrieval-Augmented Generation (RAG) pipelines by testing retrieval relevance, context grounding, and answer fidelity against source documents.
+- Collaborated with data engineers to validate input datasets and ground-truth labels used in evaluation pipelines on Databricks.
+- Assessed AI outputs for consistency across demographic variables and flagged biased or inconsistent model behaviour.
+- Partnered with data scientists and ML engineers to define acceptance criteria and translate business requirements into measurable Eval metrics.
+
 ### Lead Test Engineer — Web & Mobile App Testing
 **Pfizer | Tata Consultancy Services** · United Kingdom  
 _Sep 2021 – May 2025_
 
-- Spearheaded testing of high-impact projects; developed scalable automation frameworks using Appium & Playwright.
+- Spearheaded testing of high-impact projects, developed scalable automation frameworks using Appium & Playwright.
 - Led integration of automated testing pipelines into GitHub Actions for CI/CD workflows.
-- Architected and implemented scalable, maintainable test strategies across multiple product lines.
+- Architected and implemented scalable, maintainable test strategies across multiple product lines as an SDET, bridging development and quality engineering.
 - Collaborated with UX/UI designers, developers & product managers to surface quality issues early in the design phase.
 - Mentored testing team, providing guidance to ensure best practices and adherence to standards.
 - Successfully tested RESTful APIs and WebSocket services using Postman.
@@ -77,7 +95,7 @@ _Dec 2012 – Dec 2015_
 
 ---
 
-## Open Source Projects
+## Projects
 
 ### AIQA — AI-Powered Test Lifecycle Automation
 **Stack:** TypeScript, Playwright, Playwright CLI, GitHub Copilot / Claude  
@@ -94,22 +112,11 @@ _Dec 2012 – Dec 2015_
 - AI-assisted browser automation framework using Model Context Protocol to execute manual test scenarios with screenshot capture and detailed reporting.
 - Supports cross-browser testing, accessibility verification, console error monitoring, and network request validation driven by structured markdown test plans.
 
-### Agentic-Testing — Playwright Agentic Test Automation
-**Stack:** TypeScript, Playwright Agents, MCP, VS Code Copilot  
-**URL:** github.com/rohan12patil/Agentic-Testing
-
-- Demonstrates Playwright agentic testing using Planner and Generator tools in VS Code Copilot Chat to auto-generate test plans and executable test scripts from natural language.
-- Integrates Playwright MCP extension with GitHub Copilot to run AI-driven tests in headed mode from a prompt, reducing test authoring time significantly.
-
 ---
 
 ## Education
 
 **Bachelor of Engineering (B.E.) — Computer Science**  
+Visvesvaraya Technological University (VTU), Karnataka, India  
 _Sep 2008 – Jun 2012_
 
----
-
-## Languages
-
-English · Hindi · Marathi

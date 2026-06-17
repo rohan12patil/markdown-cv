@@ -1,7 +1,7 @@
-# CV — Rohan Patil
+# MARKDOWN CV
 
-Markdown-based CV with one-command DOCX/PDF generation.  
-Edit `cv.md` → run build → get a formatted Word document.
+Markdown-based CV with one-command DOCX and PDF generation.  
+Edit `cv.md` → run build → get a formatted Word document and PDF.
 
 ---
 
@@ -17,8 +17,8 @@ npm install
 # Open cv.md in VS Code and make changes
 
 # 3. Build
-npm run build           # → dist/RohanPatil_CV.docx
-npm run build:pdf       # → dist/RohanPatil_CV.docx + .pdf (needs LibreOffice)
+npm run build           # → dist/CV.docx
+npm run build:pdf       # → dist/CV.docx + dist/CV.pdf
 ```
 
 ---
@@ -26,14 +26,15 @@ npm run build:pdf       # → dist/RohanPatil_CV.docx + .pdf (needs LibreOffice)
 ## File structure
 
 ```
-cv/
+markdown-cv/
 ├── cv.md                  ← Edit this — your CV source of truth
 ├── package.json
 ├── scripts/
-│   └── build.js           ← Build script (md → docx/pdf)
+│   └── build.js           ← Build script (md → docx + pdf)
 ├── dist/                  ← Generated output (git-ignored)
-│   ├── RohanPatil_CV.docx
-│   └── RohanPatil_CV.pdf
+│   ├── CV.docx
+│   ├── CV.html            ← Intermediate file used for PDF generation
+│   └── CV.pdf
 └── .vscode/
     ├── tasks.json         ← VS Code build tasks (Ctrl+Shift+B)
     └── extensions.json    ← Recommended extensions
@@ -56,13 +57,24 @@ The CV uses standard Markdown. The build script parses specific patterns:
 **GitHub:** github.com/yourhandle
 ```
 
+### Professional Summary
+Bullet-point list rendered as formatted bullets in both DOCX and PDF:
+```markdown
+## Professional Summary
+
+- First summary point
+- Second summary point
+```
+
 ### Skills table
 Standard Markdown table — add/remove rows freely:
 ```markdown
-| Category   | Tools / Technologies         |
-|------------|------------------------------|
-| Automation | Playwright, Selenium, Appium |
-| Languages  | TypeScript, Python, Java     |
+| Category    | Tools / Technologies         |
+|-------------|------------------------------|
+| Automation  | Playwright, Selenium, Appium |
+| Languages   | TypeScript, Python, Java     |
+| AI Testing  | Evals                        |
+| Performance | K6                           |
 ```
 
 ### Employment entries
@@ -97,8 +109,8 @@ _Start Date – End Date_
 
 Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on Mac) to open the task picker:
 
-- **Build CV (DOCX)** — generates `dist/RohanPatil_CV.docx`
-- **Build CV (DOCX + PDF)** — generates both (requires LibreOffice)
+- **Build CV (DOCX)** — generates `dist/CV.docx`
+- **Build CV (DOCX + PDF)** — generates both
 - **Watch CV** — auto-rebuilds every time you save `cv.md`
 
 Or use the terminal:
@@ -112,17 +124,22 @@ npm run watch
 
 ## PDF generation
 
-PDF export requires LibreOffice:
+PDF is generated using a headless browser — **no LibreOffice required**.
 
+The build script automatically detects an installed browser on your machine:
+
+| Platform | Browsers checked (in order) |
+|----------|------------------------------|
+| Windows  | Microsoft Edge, Google Chrome |
+| macOS    | Google Chrome, Microsoft Edge, Chromium |
+| Linux    | google-chrome, chromium-browser, chromium |
+
+Just run:
 ```bash
-# Ubuntu / Debian
-sudo apt install libreoffice
-
-# macOS (via Homebrew)
-brew install --cask libreoffice
+npm run build:pdf
 ```
 
-Then run `npm run build:pdf`.
+If no supported browser is found, install [Google Chrome](https://www.google.com/chrome/) or [Microsoft Edge](https://www.microsoft.com/edge) and retry.
 
 ---
 
@@ -146,7 +163,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: CV
-          path: dist/RohanPatil_CV.docx
+          path: dist/CV.docx
 ```
 
 This uploads the generated `.docx` as a downloadable artifact on every commit.

@@ -124,7 +124,7 @@ function parseMd(mdText) {
       if (s.includes('summary'))   { section = 'summary';    continue; }
       if (s.includes('skill'))     { section = 'skills';     continue; }
       if (s.includes('employment')){ section = 'employment'; continue; }
-      if (s.includes('open source')){ section = 'projects';  continue; }
+      if (s.includes('project'))    { section = 'projects';  continue; }
       if (s.includes('education')) { section = 'education';  continue; }
       if (s.includes('language'))  { section = 'languages';  continue; }
       continue;
@@ -193,6 +193,9 @@ function parseMd(mdText) {
       }
       const dateMatch = line.match(/^_(.+)_$/);
       if (dateMatch) { data.educationDate = dateMatch[1].trim(); }
+      if (!line.startsWith('**') && !line.startsWith('_') && line) {
+        data.educationInstitution = line.trim();
+      }
       continue;
     }
 
@@ -225,6 +228,127 @@ function skillRow(label, items) {
       })
     ]
   });
+}
+
+// ─── HTML builder (used for PDF generation) ──────────────────────────────
+function buildHtml(cv) {
+  const li = items => items.map(b => `<li>${b}</li>`).join('\n');
+  const summaryBullets = cv.summary
+    .filter(l => l.startsWith('- '))
+    .map(l => l.slice(2).trim());
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { margin: 18mm 16mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Calibri, Arial, sans-serif; font-size: 10pt; color: #2C2C2C; }
+  h1  { font-family: Cambria, Georgia, serif; color: #1E2761; font-size: 24pt; margin-bottom: 4px; }
+  .role { color: #5A6585; font-size: 12pt; margin-bottom: 5px; }
+  .contact { font-size: 9.5pt; margin-bottom: 10px; }
+  .contact .link { color: #3A86FF; }
+  .contact .sep  { color: #5A6585; margin: 0 5px; }
+  .divider { border: none; border-top: 2px solid #1E2761; margin: 8px 0 14px; }
+  h2 { font-family: Cambria, Georgia, serif; color: #1E2761; font-size: 12pt; font-weight: bold;
+       border-bottom: 1px solid #1E2761; padding-bottom: 2px; margin: 14px 0 6px; }
+  .job-block { margin-bottom: 10px; }
+  .job-intro { break-inside: avoid; page-break-inside: avoid; break-after: avoid; page-break-after: avoid; }
+  .job-row { display: flex; justify-content: space-between; align-items: baseline; margin: 8px 0 1px; }
+  .job-title { font-weight: bold; color: #1E2761; font-size: 10.5pt; }
+  .job-date  { color: #3A86FF; font-size: 9.5pt; white-space: nowrap; margin-left: 8px; }
+  .job-company { color: #5A6585; font-style: italic; font-size: 9.5pt; margin-bottom: 4px; }
+  ul { margin: 4px 0 8px 18px; }
+  li { margin: 2px 0; font-size: 9.5pt; line-height: 1.4; }
+  table { width: 100%; border-collapse: collapse; margin: 2px 0 8px; }
+  td { padding: 2px 6px 2px 0; font-size: 9.5pt; vertical-align: top; }
+  td.label { font-weight: bold; color: #1E2761; white-space: nowrap; width: 110px; }
+  .proj-url   { color: #3A86FF; font-size: 9pt; }
+  .proj-stack { color: #5A6585; font-style: italic; font-size: 9pt; margin-bottom: 3px; }
+  p { font-size: 9.5pt; margin: 4px 0; }
+</style>
+</head>
+<body>
+  <h1>${cv.header.name || ''}</h1>
+  <div class="role">${cv.header.role || ''}</div>
+  <div class="contact">
+    <span class="link">${cv.header.email || ''}</span>
+    <span class="sep">·</span>${cv.header.phone || ''}
+    <span class="sep">·</span>${cv.header.location || ''}
+    <span class="sep">·</span><span class="link">${cv.header.linkedin || ''}</span>
+  </div>
+  <hr class="divider">
+
+  <h2>Professional Summary</h2>
+  <ul>${li(summaryBullets)}</ul>
+
+  <h2>Skills</h2>
+  <table>${cv.skills.map(s => `
+    <tr><td class="label">${s.label}</td><td>${s.items.join('  ·  ')}</td></tr>`).join('')}
+  </table>
+
+  <h2>Employment History</h2>
+  ${cv.jobs.map(j => `
+    <div class="job-block">
+      <div class="job-intro">
+        <div class="job-row">
+          <span class="job-title">${j.title}</span>
+          <span class="job-date">${j.date}</span>
+        </div>
+        <div class="job-company">${j.company}</div>
+      </div>
+      <ul>${li(j.bullets)}</ul>
+    </div>`).join('')}
+
+  <h2>Projects</h2>
+  ${cv.projects.map(p => `
+    <div class="job-block">
+      <div class="job-intro">
+        <div class="job-row">
+          <span class="job-title">${p.title}</span>
+          <span class="proj-url">${p.url}</span>
+        </div>
+        <div class="proj-stack">${p.stack}</div>
+      </div>
+      <ul>${li(p.bullets)}</ul>
+    </div>`).join('')}
+
+  <h2>Education</h2>
+  <div class="job-row">
+    <span class="job-title">${cv.education}</span>
+    <span class="job-date">${cv.educationDate || ''}</span>
+  </div>
+  ${cv.educationInstitution ? `<div class="job-company">${cv.educationInstitution}</div>` : ''}
+
+</body>
+</html>`;
+}
+
+// ─── Find installed headless browser ─────────────────────────────────────
+function findBrowser() {
+  const candidates = {
+    win32: [
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+      'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    ],
+    darwin: [
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+      '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    ],
+    linux: [
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium-browser',
+      '/usr/bin/chromium',
+    ],
+  };
+  const platform = process.platform === 'win32' ? 'win32'
+                 : process.platform === 'darwin' ? 'darwin'
+                 : 'linux';
+  return (candidates[platform] || []).find(p => fs.existsSync(p)) || null;
 }
 
 // ─── Main build ───────────────────────────────────────────────────────────
@@ -298,7 +422,7 @@ async function build() {
 
   // Projects
   if (cv.projects.length > 0) {
-    children.push(sectionHeading('Open Source Projects'));
+    children.push(sectionHeading('Projects'));
     children.push(sectionDivider());
     cv.projects.forEach((proj, i) => {
       children.push(projectTitle(proj.title, proj.url));
@@ -314,21 +438,20 @@ async function build() {
   children.push(sectionDivider());
   children.push(new Paragraph({
     tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
-    spacing: { before: 60, after: 40 },
+    spacing: { before: 60, after: 20 },
     children: [
       new TextRun({ text: cv.education, bold: true, size: 22, color: NAVY, font: "Calibri" }),
       new TextRun({ text: '\t' + (cv.educationDate || ''), size: 20, color: ACCENT, font: "Calibri" })
     ]
   }));
+  if (cv.educationInstitution) {
+    children.push(new Paragraph({
+      spacing: { before: 0, after: 40 },
+      children: [new TextRun({ text: cv.educationInstitution, italics: true, size: 20, color: MUTED, font: "Calibri" })]
+    }));
+  }
   children.push(spacer());
 
-  // Languages
-  children.push(sectionHeading('Languages'));
-  children.push(sectionDivider());
-  children.push(new Paragraph({
-    spacing: { before: 60, after: 0 },
-    children: [new TextRun({ text: cv.languages, size: 20, font: "Calibri", color: "1A1A2E" })]
-  }));
 
   // Assemble document
   const doc = new Document({
@@ -356,14 +479,37 @@ async function build() {
   fs.writeFileSync(OUTPUT, buf);
   console.log(`✅ DOCX → ${OUTPUT}`);
 
-  // Optional PDF via LibreOffice
+  // Optional PDF via headless Chrome/Edge
   if (process.argv.includes('--pdf')) {
-    const { execSync } = require('child_process');
-    try {
-      execSync(`soffice --headless --convert-to pdf --outdir "${OUTDIR}" "${OUTPUT}"`, { stdio: 'inherit' });
-      console.log(`✅ PDF  → ${OUTDIR}/RohanPatil_CV.pdf`);
-    } catch {
-      console.warn('⚠️  PDF conversion failed — is LibreOffice installed? Run: sudo apt install libreoffice');
+    const htmlFile = path.join(OUTDIR, 'CV.html');
+    const pdfFile  = path.join(OUTDIR, 'CV.pdf');
+    fs.writeFileSync(htmlFile, buildHtml(cv), 'utf8');
+
+    const browserPath = findBrowser();
+    if (!browserPath) {
+      console.warn('⚠️  PDF skipped — Chrome or Edge not found. Install one and retry.');
+    } else {
+      try {
+        const puppeteer = require('puppeteer-core');
+        const fileUrl = `file:///${htmlFile.replace(/\\/g, '/')}`;
+        const browser = await puppeteer.launch({
+          executablePath: browserPath,
+          args: ['--no-sandbox', '--disable-gpu']
+        });
+        const page = await browser.newPage();
+        await page.goto(fileUrl, { waitUntil: 'networkidle0' });
+        await page.pdf({
+          path: pdfFile,
+          format: 'A4',
+          margin: { top: '18mm', right: '16mm', bottom: '18mm', left: '16mm' },
+          displayHeaderFooter: false,
+          printBackground: true
+        });
+        await browser.close();
+        console.log(`✅ PDF  → ${pdfFile}`);
+      } catch (e) {
+        console.warn('⚠️  PDF conversion failed:', e.message);
+      }
     }
   }
 }
