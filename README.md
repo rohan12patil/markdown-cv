@@ -17,8 +17,8 @@ npm install
 # Open cv.md in VS Code and make changes
 
 # 3. Build
-npm run build           # → dist/CV.docx
-npm run build:pdf       # → dist/CV.docx + dist/CV.pdf
+npm run build           # → dist/<Name>_CV_MonYYYY.docx
+npm run build:pdf       # → dist/<Name>_CV_MonYYYY.docx + .pdf
 ```
 
 ---
@@ -31,14 +31,19 @@ markdown-cv/
 ├── package.json
 ├── scripts/
 │   └── build.js           ← Build script (md → docx + pdf)
+├── .github/
+│   └── workflows/
+│       └── build.yml      ← CI: auto-builds on push to main
 ├── dist/                  ← Generated output (git-ignored)
-│   ├── CV.docx
-│   ├── CV.html            ← Intermediate file used for PDF generation
-│   └── CV.pdf
+│   ├── <Name>_CV_MonYYYY.docx
+│   ├── <Name>_CV_MonYYYY.html  ← Intermediate file used for PDF generation
+│   └── <Name>_CV_MonYYYY.pdf
 └── .vscode/
     ├── tasks.json         ← VS Code build tasks (Ctrl+Shift+B)
     └── extensions.json    ← Recommended extensions
 ```
+
+The output filename is derived automatically from the `# Name` heading in `cv.md` and stamped with the current month and year (e.g. `RohanPatil_CV_Jun2025.docx`).
 
 ---
 
@@ -51,10 +56,10 @@ The CV uses standard Markdown. The build script parses specific patterns:
 # Your Name
 **Role:** Your Title
 **Email:** you@email.com
-**Phone:** 07700000000
+**Phone:** +44 7700000000
 **Location:** City, Country
-**LinkedIn:** linkedin.com/in/yourhandle
-**GitHub:** github.com/yourhandle
+**LinkedIn:** https://linkedin.com/in/yourhandle
+**GitHub:** https://github.com/yourhandle
 ```
 
 ### Professional Summary
@@ -73,8 +78,9 @@ Standard Markdown table — add/remove rows freely:
 |-------------|------------------------------|
 | Automation  | Playwright, Selenium, Appium |
 | Languages   | TypeScript, Python, Java     |
-| AI Testing  | Evals                        |
+| AI Testing  | Evals, Databricks            |
 | Performance | K6                           |
+| Methodology | Agile, Waterfall             |
 ```
 
 ### Employment entries
@@ -87,7 +93,7 @@ _Start Date – End Date_
 - Bullet point two
 ```
 
-### Open source projects
+### Projects
 ```markdown
 ### Project Name — Short Description
 **Stack:** TypeScript, Playwright
@@ -100,6 +106,7 @@ _Start Date – End Date_
 ### Education
 ```markdown
 **Degree Name**
+University Name, Location
 _Start Date – End Date_
 ```
 
@@ -109,7 +116,7 @@ _Start Date – End Date_
 
 Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on Mac) to open the task picker:
 
-- **Build CV (DOCX)** — generates `dist/CV.docx`
+- **Build CV (DOCX)** — generates `dist/<Name>_CV_MonYYYY.docx`
 - **Build CV (DOCX + PDF)** — generates both
 - **Watch CV** — auto-rebuilds every time you save `cv.md`
 
@@ -143,37 +150,13 @@ If no supported browser is found, install [Google Chrome](https://www.google.com
 
 ---
 
-## GitHub Actions (optional)
+## GitHub Actions
 
-To auto-generate and attach the DOCX on every push, create `.github/workflows/build.yml`:
+The repository includes `.github/workflows/build.yml` which automatically builds the CV on every push to `main` (when `cv.md`, `build.js`, or `package.json` change) and on manual trigger.
 
-```yaml
-name: Build CV
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm install
-      - run: npm run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: CV
-          path: dist/CV.docx
-```
+Both the DOCX and PDF are uploaded as a downloadable artifact named **CV**, retained for 60 days. Find them under **Actions → your run → Artifacts**.
 
-This uploads the generated `.docx` as a downloadable artifact on every commit.
+You can also trigger a build manually via **Actions → Build CV → Run workflow**.
 
 ---
 
-## Recommended VS Code extensions
-
-Install when prompted, or manually:
-
-- **Markdown All in One** — shortcuts, TOC, formatting
-- **Markdown Preview Enhanced** — live side-by-side preview
-- **markdownlint** — catches formatting issues

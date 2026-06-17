@@ -19,9 +19,11 @@ const {
 const INPUT  = path.join(__dirname, '..', 'cv.md');
 const OUTDIR = path.join(__dirname, '..', 'dist');
 
-// Derive output filename from the `# Name` heading in cv.md (e.g. "Rohan Patil" → "RohanPatil_CV")
+// Derive output filename from the `# Name` heading in cv.md (e.g. "Rohan Patil" → "RohanPatil_CV_Jun2025")
 const _rawName = fs.readFileSync(INPUT, 'utf8').split('\n').find(l => l.startsWith('# '))?.slice(2).trim() || 'CV';
-const FILENAME = _rawName.replace(/\s+/g, '') + '_CV';
+const _now     = new Date();
+const _stamp   = _now.toLocaleString('en-GB', { month: 'short' }) + _now.getFullYear();
+const FILENAME = _rawName.replace(/\s+/g, '') + '_CV_' + _stamp;
 const OUTPUT = path.join(OUTDIR, `${FILENAME}.docx`);
 
 // ─── Colours ─────────────────────────────────────────────────────────────

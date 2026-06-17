@@ -1,0 +1,37 @@
+name: Build CV
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cv.md'
+      - 'scripts/build.js'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CV (DOCX + PDF)
+        run: node scripts/build.js --pdf
+
+      - name: Upload CV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: CV
+          path: |
+            dist/*.docx
+            dist/*.pdf
+          retention-days: 60
