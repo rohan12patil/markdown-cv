@@ -203,7 +203,7 @@ function parseMd(mdText) {
   // Flush open job/project
   if (currentJob) data.jobs.push(currentJob);
   if (currentProject) data.projects.push(currentProject);
-  data.summary = summaryLines.join(' ');
+  data.summary = summaryLines;
   return data;
 }
 
@@ -261,10 +261,17 @@ async function build() {
   // Summary
   children.push(sectionHeading('Professional Summary'));
   children.push(sectionDivider());
-  children.push(new Paragraph({
-    spacing: { before: 0, after: 200 },
-    children: [new TextRun({ text: cv.summary, size: 20, font: "Calibri", color: "1A1A2E" })]
-  }));
+  cv.summary.forEach(line => {
+    if (line.startsWith('- ')) {
+      children.push(bullet(line.slice(2).trim()));
+    } else if (line) {
+      children.push(new Paragraph({
+        spacing: { before: 0, after: 80 },
+        children: [new TextRun({ text: line, size: 20, font: "Calibri", color: "1A1A2E" })]
+      }));
+    }
+  });
+  children.push(spacer());
 
   // Skills
   children.push(sectionHeading('Skills'));
