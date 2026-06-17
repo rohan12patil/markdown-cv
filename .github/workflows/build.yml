@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,11 +39,42 @@ jobs:
       - name: Build CV (DOCX + PDF)
         run: node scripts/build.js --pdf
 
-      - name: Upload CV artifacts
-        uses: actions/upload-artifact@v4
+      - name: Get release metadata
+        id: meta
+        run: |
+          echo "tag=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
+          echo "title=CV — $(date +'%b %Y')" >> $GITHUB_OUTPUT
+
+      # ── GitHub Release ────────────────────────────────────────────────────
+      - name: Create or update monthly release
+        uses: softprops/action-gh-release@v2
         with:
-          name: CV
-          path: |
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.title }}
+          body: DOCX and PDF build for ${{ steps.meta.outputs.title }}.
+          files: |
             dist/*.docx
             dist/*.pdf
-          retention-days: 60
+          make_latest: true
+
+      # ── GitHub Pages ──────────────────────────────────────────────────────
+      - name: Prepare Pages content
+        run: |
+          mkdir -p gh-pages
+          cp dist/*.html gh-pages/index.html
+          node -e "
+            const fs = require('fs');
+            const url = 'https://github.com/rohan12patil/markdown-cv/releases/latest';
+            const banner = \`<div style='position:fixed;bottom:0;left:0;right:0;background:#1E2761;color:#fff;text-align:center;padding:10px;font-family:sans-serif;font-size:13px;z-index:9999'>
+              <a href='\${url}' target='_blank' style='color:#fff;font-weight:600;text-decoration:underline'>&#11015; Download DOCX &amp; PDF</a>
+            </div>\`;
+            let html = fs.readFileSync('gh-pages/index.html', 'utf8');
+            fs.writeFileSync('gh-pages/index.html', html.replace('</body>', banner + '</body>'));
+          "
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages
+          force_orphan: true
