@@ -1,4 +1,4 @@
-# MARKDOWN CV
+# Markdown-to-CV 
 
 Markdown-based CV with one-command DOCX and PDF generation.  
 Edit `cv.md` → run build → get a formatted Word document and PDF.

@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * build.js — converts cv.md → RohanPatil_CV.docx (and optionally .pdf)
+ * build.js — converts cv.md → dist/<Name>_CV.docx (and optionally .pdf)
+ * Filename is derived automatically from the `# Name` heading in cv.md.
  * Usage:
- *   node scripts/build.js          → generates dist/RohanPatil_CV.docx
- *   node scripts/build.js --pdf    → also generates dist/RohanPatil_CV.pdf
+ *   node scripts/build.js          → generates dist/<Name>_CV.docx
+ *   node scripts/build.js --pdf    → also generates dist/<Name>_CV.pdf
  */
 
 const fs   = require('fs');
@@ -17,7 +18,11 @@ const {
 // ─── Config ──────────────────────────────────────────────────────────────
 const INPUT  = path.join(__dirname, '..', 'cv.md');
 const OUTDIR = path.join(__dirname, '..', 'dist');
-const OUTPUT = path.join(OUTDIR, 'CV.docx');
+
+// Derive output filename from the `# Name` heading in cv.md (e.g. "Rohan Patil" → "RohanPatil_CV")
+const _rawName = fs.readFileSync(INPUT, 'utf8').split('\n').find(l => l.startsWith('# '))?.slice(2).trim() || 'CV';
+const FILENAME = _rawName.replace(/\s+/g, '') + '_CV';
+const OUTPUT = path.join(OUTDIR, `${FILENAME}.docx`);
 
 // ─── Colours ─────────────────────────────────────────────────────────────
 const NAVY   = "1E2761";
@@ -481,8 +486,8 @@ async function build() {
 
   // Optional PDF via headless Chrome/Edge
   if (process.argv.includes('--pdf')) {
-    const htmlFile = path.join(OUTDIR, 'CV.html');
-    const pdfFile  = path.join(OUTDIR, 'CV.pdf');
+    const htmlFile = path.join(OUTDIR, `${FILENAME}.html`);
+    const pdfFile  = path.join(OUTDIR, `${FILENAME}.pdf`);
     fs.writeFileSync(htmlFile, buildHtml(cv), 'utf8');
 
     const browserPath = findBrowser();

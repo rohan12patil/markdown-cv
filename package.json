@@ -1,5 +1,5 @@
 {
-  "name": "cv-rohan-patil",
+  "name": "markdown-cv",
   "version": "1.0.0",
   "description": "Markdown-based CV with automated DOCX/PDF generation",
   "scripts": {
