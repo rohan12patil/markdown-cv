@@ -3,10 +3,6 @@ name: Build CV
 on:
   push:
     branches: [main]
-    paths:
-      - 'cv.md'
-      - 'scripts/build.js'
-      - 'package.json'
   workflow_dispatch:
 
 jobs:
