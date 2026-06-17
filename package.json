@@ -1,0 +1,16 @@
+{
+  "name": "cv-rohan-patil",
+  "version": "1.0.0",
+  "description": "Markdown-based CV with automated DOCX/PDF generation",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:pdf": "node scripts/build.js --pdf",
+    "watch": "nodemon --watch cv.md --ext md --exec \"node scripts/build.js\""
+  },
+  "dependencies": {
+    "docx": "^8.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
