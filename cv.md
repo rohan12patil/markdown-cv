@@ -99,18 +99,20 @@ _Dec 2012 – Dec 2015_
 
 ### AIQA — AI-Powered Test Lifecycle Automation
 **Stack:** TypeScript, Playwright, Playwright CLI, GitHub Copilot / Claude  
-**URL:** github.com/rohan12patil/AIQA
+**URL:** https://github.com/rohan12patil/AIQA
 
 - End-to-end AI-assisted QA workflow: AI reads specs, generates test plans, derives test cases, writes Playwright automation scripts, and ships reports entirely inside VS Code.
 - 4-step pipeline (Explore → Plan → Prepare → Automate) using Playwright CLI for token-efficient agent execution; demonstrated 40–60% reduction in test design effort.
 - Reusable Page Object Model architecture with smoke, regression, and negative suites; 30 automated test cases with traceable IDs and tagging model.
 
-### Playwright-MCP — MCP-Based Manual Testing Framework
-**Stack:** Playwright MCP, VS Code, GitHub Copilot, Accessibility Testing  
-**URL:** github.com/rohan12patil/Playwright-MCP
+### Test Automation Framework — Production-Grade Playwright E2E Framework
+**Stack:** TypeScript, Playwright, Faker.js, Allure Reports, GitHub Actions  
+**URL:** https://github.com/rohan12patil/Test-Automation-Framework
 
-- AI-assisted browser automation framework using Model Context Protocol to execute manual test scenarios with screenshot capture and detailed reporting.
-- Supports cross-browser testing, accessibility verification, console error monitoring, and network request validation driven by structured markdown test plans.
+- Production-grade E2E framework using Playwright Test with Page Object Model and native fixture injection, eliminating manual class construction and reducing test boilerplate.
+- Session caching via `storageState` achieves single login per test run, shared across all browsers and workers for faster parallel execution.
+- Faker.js data factories generate unique, realistic test data dynamically, preventing collisions in parallel runs; built-in API helper enables programmatic state setup and teardown.
+- Multi-browser CI pipeline (Chromium, Firefox, WebKit) runs in parallel on GitHub Actions with Allure reporting and custom `expect()` matchers.
 
 ---
 
